@@ -20,9 +20,14 @@ type ExternalServiceConfig struct {
   KS_SERVICE_METHOD string;
 }
 
+type CronJobsConfig struct {
+  KS_SYNC_SERVICES_CRON string;
+}
+
 type Config struct {
   DbConfig DbConfig;
   ExternalServiceConfig ExternalServiceConfig;
+  CronJobsConfig CronJobsConfig;
 }
 
 func New() *Config {
@@ -38,6 +43,9 @@ func New() *Config {
       KS_SERVICE_HOST: getEnv("KS_SERVICE_HOST", ""),
       KS_SERVICE_PORT: getEnv("KS_SERVICE_PORT", ""),
       KS_SERVICE_METHOD: getEnv("KS_SERVICE_METHOD", ""),
+    },
+    CronJobsConfig: CronJobsConfig {
+      KS_SYNC_SERVICES_CRON: getEnv("KS_SYNC_SERVICES_CRON", ""),
     },
   };
 }

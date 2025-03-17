@@ -21,6 +21,7 @@ func init() {
 }
 
 func runSheduller(database *db.Db) {
+	conf := config.New();
 		// create a scheduler
 	s, err := gocron.NewScheduler()
 	if err != nil {
@@ -33,18 +34,13 @@ func runSheduller(database *db.Db) {
 	})
 
 	// add a job to the scheduler
-	j, err := s.NewJob(
-		gocron.CronJob(
-			"*/1 * * * *",
+	_, err = s.NewJob(gocron.CronJob(
+			conf.CronJobsConfig.KS_SYNC_SERVICES_CRON,
 			false,
-		),
-		gocron.NewTask(syncSheduller.SyncRepository.Synchronize, config.New()),
-	)
+		), gocron.NewTask(syncSheduller.SyncRepository.Synchronize, conf))
 	if err != nil {
 		fmt.Println(time.Now(), " - Don't create a new job!")
 	}
-	// each job has a unique id
-	fmt.Println(j.ID())
 
 	// start the scheduler
 	s.Start()
