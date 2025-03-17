@@ -1,0 +1,12 @@
+version: '3'
+services:
+  kssyncservice_golang:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kssyncservice_golang
+    restart: always
+    ports:
+      - 3002:8081
+    env_file:
+      - ./.env
