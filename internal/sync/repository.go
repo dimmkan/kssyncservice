@@ -85,8 +85,8 @@ func (repo *SyncRepository) Synchronize(conf *config.Config) {
 	var insertHashes []string
 	var deleteHashes []string 
 	
-	repo.Database.DB.Model(&Tmp_Ksservice{}).Select("tmp_services.line_hash").Joins("full outer join services on services.line_hash = tmp_services.line_hash").Where("services.line_hash is NULL").Scan(&insertHashes)
-	repo.Database.DB.Model(&Tmp_Ksservice{}).Select("services.line_hash").Joins("full outer join services on services.line_hash = tmp_services.line_hash").Where("tmp_services.line_hash is NULL").Scan(&deleteHashes)
+	repo.Database.DB.Model(&Tmp_Ksservice{}).Select("tmp_ksservices.line_hash").Joins("full outer join ksservices on ksservices.line_hash = tmp_ksservices.line_hash").Where("ksservices.line_hash is NULL").Scan(&insertHashes)
+	repo.Database.DB.Model(&Tmp_Ksservice{}).Select("ksservices.line_hash").Joins("full outer join ksservices on kssservices.line_hash = tmp_ksservices.line_hash").Where("tmp_ksservices.line_hash is NULL").Scan(&deleteHashes)
 	
 	if len(deleteHashes) > 0 {
 		repo.Database.DB.Where("line_hash IN ?", deleteHashes).Unscoped().Delete(&Ksservice{})
