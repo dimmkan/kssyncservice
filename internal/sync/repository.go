@@ -24,8 +24,8 @@ func NewSyncRepository(database *db.Db) *SyncRepository {
 	}
 }
 
-func calculateDataHash(data []Tmp_Service) []Tmp_Service {
-	ns := []Tmp_Service{}
+func calculateDataHash(data []Tmp_Ksservice) []Tmp_Ksservice {
+	ns := []Tmp_Ksservice{}
 	for _, value := range data {
 		values := reflect.ValueOf(value)
 		var builder strings.Builder
@@ -42,17 +42,17 @@ func calculateDataHash(data []Tmp_Service) []Tmp_Service {
 	return ns;
 }
 
-func filterHashedData(hashedData []Tmp_Service, insertHashes []string) []Service {
+func filterHashedData(hashedData []Tmp_Ksservice, insertHashes []string) []Ksservice {
 	insertMap := make(map[string]bool)
 	for i := 0; i < len(insertHashes); i++ {
 		insertMap[insertHashes[i]] = true
 	}
 
-	ns := []Service{}
+	ns := []Ksservice{}
 
 	for _, value := range hashedData {
 		if insertMap[value.Line_Hash] {
-			ns = append(ns, Service(value))
+			ns = append(ns, Ksservice(value))
 		}
 	}
 
@@ -77,19 +77,19 @@ func (repo *SyncRepository) Synchronize(conf *config.Config) {
 
 	hashedData := calculateDataHash(data.Data)
 
-	repo.Database.DB.Migrator().CreateTable(Tmp_Service{})
+	repo.Database.DB.Migrator().CreateTable(Tmp_Ksservice{})
 	repo.Database.DB.Omit("id").Create(&hashedData)
-	defer repo.Database.DB.Migrator().DropTable(Tmp_Service{})
+	defer repo.Database.DB.Migrator().DropTable(Tmp_Ksservice{})
 
 
 	var insertHashes []string
 	var deleteHashes []string 
 	
-	repo.Database.DB.Model(&Tmp_Service{}).Select("tmp_services.line_hash").Joins("full outer join services on services.line_hash = tmp_services.line_hash").Where("services.line_hash is NULL").Scan(&insertHashes)
-	repo.Database.DB.Model(&Tmp_Service{}).Select("services.line_hash").Joins("full outer join services on services.line_hash = tmp_services.line_hash").Where("tmp_services.line_hash is NULL").Scan(&deleteHashes)
+	repo.Database.DB.Model(&Tmp_Ksservice{}).Select("tmp_services.line_hash").Joins("full outer join services on services.line_hash = tmp_services.line_hash").Where("services.line_hash is NULL").Scan(&insertHashes)
+	repo.Database.DB.Model(&Tmp_Ksservice{}).Select("services.line_hash").Joins("full outer join services on services.line_hash = tmp_services.line_hash").Where("tmp_services.line_hash is NULL").Scan(&deleteHashes)
 	
 	if len(deleteHashes) > 0 {
-		repo.Database.DB.Where("line_hash IN ?", deleteHashes).Unscoped().Delete(&Service{})
+		repo.Database.DB.Where("line_hash IN ?", deleteHashes).Unscoped().Delete(&Ksservice{})
 	}
 	
 	insertData := filterHashedData(hashedData, insertHashes)

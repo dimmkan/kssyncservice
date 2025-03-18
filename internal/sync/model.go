@@ -1,6 +1,6 @@
 package sync
 
-type Tmp_Service struct {
+type Tmp_Ksservice struct {
 	Id uint `json:"id" gorm:"primaryKey"`
 	Client_name string `json:"client_name"`
 	Client_segment string `json:"client_segment"`
@@ -118,7 +118,7 @@ type Tmp_Service struct {
 	Line_Hash string `json:"line_hash"`
 }
 
-type Service struct {
+type Ksservice struct {
 	Id uint `json:"id" gorm:"primaryKey"`
 	Client_name string `json:"client_name"`
 	Client_segment string `json:"client_segment"`

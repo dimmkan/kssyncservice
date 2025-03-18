@@ -12,8 +12,8 @@ func NewServicesRepository(database *db.Db) *ServicesRepository {
 	}
 }
 
-func (repo *ServicesRepository) GetAllServices() (*[]Service, error) {
-	var services []Service
+func (repo *ServicesRepository) GetAllServices() (*[]Ksservice, error) {
+	var services []Ksservice
 	result := repo.Database.DB.Find(&services)
 
 	if result.Error != nil {
