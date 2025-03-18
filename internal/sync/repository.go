@@ -28,9 +28,12 @@ func calculateDataHash(data []Tmp_Ksservice) []Tmp_Ksservice {
 	ns := []Tmp_Ksservice{}
 	for _, value := range data {
 		values := reflect.ValueOf(value)
+		types := values.Type()
 		var builder strings.Builder
 		for i := 0; i < values.NumField(); i++ {
-			builder.WriteString(fmt.Sprintf("%v", values.Field(i)))
+			if types.Field(i).Name != "Id" {
+				builder.WriteString(fmt.Sprintf("%v", values.Field(i)))
+			}
 		}
 		hasher := sha1.New()
 		hasher.Write([]byte(builder.String()))
