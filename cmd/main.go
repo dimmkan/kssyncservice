@@ -3,8 +3,9 @@ package main
 import (
 	"fmt"
 	"kssyncservice_go/config"
-	"kssyncservice_go/internal/sync"
+	"kssyncservice_go/internal/file"
 	"kssyncservice_go/internal/services"
+	"kssyncservice_go/internal/sync"
 	"kssyncservice_go/pkg/db"
 	"log"
 	"net/http"
@@ -59,6 +60,9 @@ func main() {
 	// Handlers
 	services.NewServicesHandler(router, services.ServicesHandlerDeps{
 		ServicesRepository: servicesRepository,
+	})
+	file.NewFileHandler(router, file.FileHandlerDeps{
+		Config: config.New(),
 	})
 	
 	server := http.Server{

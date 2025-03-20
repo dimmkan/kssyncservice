@@ -28,6 +28,13 @@ type Config struct {
   DbConfig DbConfig;
   ExternalServiceConfig ExternalServiceConfig;
   CronJobsConfig CronJobsConfig;
+  ExternalFileConfig ExternalFileConfig;
+}
+
+type ExternalFileConfig struct {
+  FILE_SERVICE_HOST string;
+  FILE_SERVICE_PORT string;
+  FILE_SERVICE_METHOD string;
 }
 
 func New() *Config {
@@ -46,6 +53,11 @@ func New() *Config {
     },
     CronJobsConfig: CronJobsConfig {
       KS_SYNC_SERVICES_CRON: getEnv("KS_SYNC_SERVICES_CRON", ""),
+    },
+    ExternalFileConfig: ExternalFileConfig{
+      FILE_SERVICE_HOST: getEnv("FILE_SERVICE_HOST", ""),
+      FILE_SERVICE_PORT: getEnv("FILE_SERVICE_PORT", ""),
+      FILE_SERVICE_METHOD: getEnv("FILE_SERVICE_METHOD", ""),
     },
   };
 }
